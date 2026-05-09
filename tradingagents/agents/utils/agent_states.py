@@ -249,6 +249,7 @@ class OrchestrationState:
         )
 
     def to_legacy_state(self) -> AgentState:
+        """Flatten artifacts for compatibility with existing loggers and tests."""
         return {
             "company_of_interest": self.context.company_of_interest,
             "trade_date": self.context.trade_date,

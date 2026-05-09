@@ -14,7 +14,7 @@ class PhaseCheckpointStore:
         self._data_dir = Path(data_dir)
 
     def _path(self, ticker: str, trade_date: str) -> Path:
-        safe_ticker = safe_ticker_component(ticker).upper()
+        safe_ticker = safe_ticker_component(ticker)
         directory = self._data_dir / "orchestrator_checkpoints" / safe_ticker
         directory.mkdir(parents=True, exist_ok=True)
         return directory / f"{trade_date}.json"

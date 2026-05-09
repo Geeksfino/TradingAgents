@@ -208,11 +208,7 @@ class TradingAgentsGraph:
             trade_date,
             past_context=past_context,
         )
-        final_state = (
-            pipeline_state.to_legacy_state()
-            if hasattr(pipeline_state, "to_legacy_state")
-            else pipeline_state
-        )
+        final_state = pipeline_state.to_legacy_state()
 
         self.curr_pipeline_state = pipeline_state
         self.curr_state = final_state
@@ -282,8 +278,6 @@ class TradingAgentsGraph:
 
         if isinstance(pipeline_state, OrchestrationState):
             legacy_payload["orchestration_state"] = pipeline_state.to_dict()
-        elif isinstance(pipeline_state, dict):
-            legacy_payload["orchestration_state"] = pipeline_state
 
         self.log_states_dict[str(trade_date)] = legacy_payload
 

@@ -37,6 +37,7 @@ class Propagator:
         past_context: str = "",
         selected_analysts: list[str] | None = None,
     ) -> AgentState:
+        """Compatibility wrapper for callers that still expect the legacy flat state."""
         return self.create_orchestration_state(
             company_name,
             trade_date,
