@@ -207,7 +207,7 @@ class ExecutionMetadata:
     def record_failure(self, phase_name: str, error: Exception) -> None:
         self.status = "failed"
         self.current_phase = phase_name
-        self.errors.append(f"{phase_name}: {error}")
+        self.errors.append(f"{phase_name}: {type(error).__name__}: {error}")
         self.updated_at = _utc_now()
 
     def to_dict(self) -> ExecutionMetadataState:

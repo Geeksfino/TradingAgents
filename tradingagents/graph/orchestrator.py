@@ -151,9 +151,6 @@ class TradingOrchestrator:
                 self._persist_checkpoint(state)
             except Exception as exc:
                 state.metadata.record_failure(phase_name, exc)
-                state.metadata.errors[-1] = (
-                    f"{phase_name}: {type(exc).__name__}: {exc}"
-                )
                 try:
                     self._persist_checkpoint(state)
                 except Exception as checkpoint_exc:
@@ -277,8 +274,7 @@ class TradingOrchestrator:
 
         raise RuntimeError(
             f"Analyst '{analyst_name}' exceeded the recursion limit "
-            f"({max_recur_limit}) without producing a final report; verify that the "
-            "bound tools return valid results."
+            f"({max_recur_limit}) without populating '{field_name}'."
         )
 
     def _run_research_debate(self, state: OrchestrationState) -> None:
