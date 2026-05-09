@@ -44,6 +44,7 @@ class LocalCollaborationBackend:
 class TradingOrchestrator:
     """Explicit phase-based runtime with typed handoffs between phases."""
 
+    DEFAULT_MAX_RECURSION_LIMIT = 100
     ANALYST_REPORT_FIELDS = {
         "market": "market_report",
         "social": "sentiment_report",
@@ -150,7 +151,12 @@ class TradingOrchestrator:
                 self._persist_checkpoint(state)
             except Exception as exc:
                 state.metadata.record_failure(phase_name, exc)
-                self._persist_checkpoint(state)
+                try:
+                    self._persist_checkpoint(state)
+                except Exception as checkpoint_exc:
+                    state.metadata.errors.append(
+                        f"{phase_name}: checkpoint persistence failed: {checkpoint_exc}"
+                    )
                 raise
 
         state.metadata.status = "completed"
@@ -244,7 +250,10 @@ class TradingOrchestrator:
         local_state = self._build_analyst_state(state)
         local_state["messages"] = [HumanMessage(content=state.context.company_of_interest)]
 
-        for _ in range(self.config.get("max_recur_limit", 100)):
+        max_recur_limit = self.config.get(
+            "max_recur_limit", self.DEFAULT_MAX_RECURSION_LIMIT
+        )
+        for _ in range(max_recur_limit):
             result = self._invoke_phase_worker(
                 f"{analyst_name}_analyst", analyst_node, local_state
             )
@@ -263,7 +272,10 @@ class TradingOrchestrator:
             tool_result = tool_node.invoke({"messages": local_state["messages"]})
             self._merge_messages(local_state, tool_result)
 
-        raise RuntimeError(f"Analyst '{analyst_name}' exceeded the recursion limit")
+        raise RuntimeError(
+            f"Analyst '{analyst_name}' exceeded the recursion limit without producing "
+            "a final report; verify that the bound tools return valid results."
+        )
 
     def _run_research_debate(self, state: OrchestrationState) -> None:
         for _ in range(self.config.get("max_debate_rounds", 1)):
