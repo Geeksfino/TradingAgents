@@ -44,7 +44,7 @@ class LocalCollaborationBackend:
 class TradingOrchestrator:
     """Explicit phase-based runtime with typed handoffs between phases."""
 
-    DEFAULT_MAX_RECURSION_LIMIT = 100
+    DEFAULT_MAX_RECUR_LIMIT = 100
     ANALYST_REPORT_FIELDS = {
         "market": "market_report",
         "social": "sentiment_report",
@@ -251,7 +251,7 @@ class TradingOrchestrator:
         local_state["messages"] = [HumanMessage(content=state.context.company_of_interest)]
 
         max_recur_limit = self.config.get(
-            "max_recur_limit", self.DEFAULT_MAX_RECURSION_LIMIT
+            "max_recur_limit", self.DEFAULT_MAX_RECUR_LIMIT
         )
         for _ in range(max_recur_limit):
             result = self._invoke_phase_worker(

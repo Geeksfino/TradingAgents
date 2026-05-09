@@ -40,11 +40,12 @@ class TradingAgentsGraph:
 
     def __init__(
         self,
-        selected_analysts=["market", "social", "news", "fundamentals"],
-        debug=False,
+        selected_analysts: List[str] = ["market", "social", "news", "fundamentals"],
+        debug: bool = False,
         config: Dict[str, Any] = None,
         callbacks: Optional[List] = None,
     ):
+        """Create a trading runtime with the selected analyst sequence."""
         self.debug = debug
         self.config = config or DEFAULT_CONFIG
         self.callbacks = callbacks or []
