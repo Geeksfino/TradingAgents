@@ -94,7 +94,7 @@ class TradingAgentsGraph:
         self.signal_processor = SignalProcessor(self.quick_thinking_llm)
 
         self.curr_state = None
-        self.curr_pipeline_state = None
+        self.current_orchestration_state = None
         self.ticker = None
         self.log_states_dict = {}
 
@@ -211,7 +211,7 @@ class TradingAgentsGraph:
         )
         final_state = pipeline_state.to_legacy_state()
 
-        self.curr_pipeline_state = pipeline_state
+        self.current_orchestration_state = pipeline_state
         self.curr_state = final_state
 
         self._log_state(trade_date, final_state, pipeline_state)
