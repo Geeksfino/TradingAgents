@@ -367,8 +367,8 @@ class TradingOrchestrator:
             ),
             judge_decision=payload.get("judge_decision", state.research.judge_decision),
             count=payload.get("count", state.research.count),
-            bull_thesis=payload.get("bull_history", state.research.bull_thesis),
-            bear_thesis=payload.get("bear_history", state.research.bear_thesis),
+            bull_thesis=payload.get("bull_thesis", state.research.bull_thesis),
+            bear_thesis=payload.get("bear_thesis", state.research.bear_thesis),
         )
 
     @staticmethod

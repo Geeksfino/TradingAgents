@@ -203,13 +203,6 @@ class TradingAgentsGraph:
 
     def _run_graph(self, company_name, trade_date):
         past_context = self.memory_log.get_past_context(company_name)
-        self.propagator.create_initial_state(
-            company_name,
-            trade_date,
-            past_context=past_context,
-            selected_analysts=self.selected_analysts,
-        )
-
         pipeline_state = self.orchestrator.run(
             company_name,
             trade_date,
