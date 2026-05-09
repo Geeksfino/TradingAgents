@@ -757,7 +757,10 @@ class TestLegacyRemoval:
         mock_graph.log_states_dict = {}
         mock_graph.debug = False
         mock_graph.config = {"results_dir": str(tmp_path)}
-        mock_graph.orchestrator.run.return_value = fake_state
+        fake_pipeline_state = MagicMock()
+        fake_pipeline_state.to_legacy_state.return_value = fake_state
+        fake_pipeline_state.to_dict.return_value = {"context": {}, "metadata": {}}
+        mock_graph.orchestrator.run.return_value = fake_pipeline_state
         mock_graph.propagator.create_initial_state.return_value = fake_state
         mock_graph.signal_processor.process_signal.return_value = "Buy"
         # Bind the real _run_graph so propagate's call to self._run_graph executes
