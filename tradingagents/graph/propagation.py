@@ -1,6 +1,10 @@
 from typing import Any, Dict
 
-from tradingagents.agents.utils.agent_states import OrchestrationState, RunContext
+from tradingagents.agents.utils.agent_states import (
+    AgentState,
+    OrchestrationState,
+    RunContext,
+)
 
 
 class Propagator:
@@ -9,7 +13,7 @@ class Propagator:
     def __init__(self, config: Dict[str, Any] | None = None):
         self.config = config or {}
 
-    def create_initial_state(
+    def create_orchestration_state(
         self,
         company_name: str,
         trade_date: str,
@@ -25,3 +29,17 @@ class Propagator:
                 past_context=past_context,
             )
         )
+
+    def create_initial_state(
+        self,
+        company_name: str,
+        trade_date: str,
+        past_context: str = "",
+        selected_analysts: list[str] | None = None,
+    ) -> AgentState:
+        return self.create_orchestration_state(
+            company_name,
+            trade_date,
+            past_context=past_context,
+            selected_analysts=selected_analysts,
+        ).to_legacy_state()
